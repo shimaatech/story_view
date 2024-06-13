@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:story_view/story_view.dart';
 
 void main() => runApp(MyApp());
@@ -141,6 +142,7 @@ class MoreStories extends StatefulWidget {
 
 class _MoreStoriesState extends State<MoreStories> {
   final storyController = StoryController();
+  int _counter = 0;
 
   @override
   void dispose() {
@@ -156,6 +158,18 @@ class _MoreStoriesState extends State<MoreStories> {
       ),
       body: StoryView(
         storyItems: [
+          StoryItem(
+              Column(
+                children: [
+                  Text('Counter: ${_counter}'),
+                  GestureDetector(
+                      onTap: () => setState(() {
+                            _counter++;
+                          }),
+                      child: Text('Increase'))
+                ],
+              ),
+              duration: Duration(seconds: 5)),
           StoryItem.text(
             title: "I guess you'd love to see more of our food. That's great.",
             backgroundColor: Colors.blue,

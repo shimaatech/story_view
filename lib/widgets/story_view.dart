@@ -642,36 +642,12 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       color: Colors.white,
       child: Stack(
         children: <Widget>[
-          _currentView,
-          Visibility(
-            visible: widget.progressPosition != ProgressPosition.none,
-            child: Align(
-              alignment: widget.progressPosition == ProgressPosition.top
-                  ? Alignment.topCenter
-                  : Alignment.bottomCenter,
-              child: SafeArea(
-                bottom: widget.inline ? false : true,
-                // we use SafeArea here for notched and bezeles phones
-                child: Container(
-                  padding: widget.indicatorOuterPadding,
-                  child: PageBar(
-                    widget.storyItems
-                        .map((it) => PageData(it!.duration, it.shown))
-                        .toList(),
-                    this._currentAnimation,
-                    key: UniqueKey(),
-                    indicatorHeight: widget.indicatorHeight,
-                    indicatorColor: widget.indicatorColor,
-                    indicatorForegroundColor: widget.indicatorForegroundColor,
-                  ),
-                ),
-              ),
-            ),
-          ),
           Align(
               alignment: Alignment.centerRight,
               heightFactor: 1,
               child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                child: _currentView,
                 onTapDown: (details) {
                   widget.controller.pause();
                 },
@@ -721,6 +697,31 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                         verticalDragInfo = null;
                       },
               )),
+          Visibility(
+            visible: widget.progressPosition != ProgressPosition.none,
+            child: Align(
+              alignment: widget.progressPosition == ProgressPosition.top
+                  ? Alignment.topCenter
+                  : Alignment.bottomCenter,
+              child: SafeArea(
+                bottom: widget.inline ? false : true,
+                // we use SafeArea here for notched and bezeles phones
+                child: Container(
+                  padding: widget.indicatorOuterPadding,
+                  child: PageBar(
+                    widget.storyItems
+                        .map((it) => PageData(it!.duration, it.shown))
+                        .toList(),
+                    this._currentAnimation,
+                    key: UniqueKey(),
+                    indicatorHeight: widget.indicatorHeight,
+                    indicatorColor: widget.indicatorColor,
+                    indicatorForegroundColor: widget.indicatorForegroundColor,
+                  ),
+                ),
+              ),
+            ),
+          ),
           Align(
             alignment:
                 _isRightToLeft ? Alignment.centerLeft : Alignment.centerRight,
