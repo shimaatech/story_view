@@ -730,7 +730,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
               child: GestureDetector(onTap: () {
                 widget.controller.previous();
               }),
-              width: 90,
+              width: MediaQuery.of(context).size.width * 0.2,
             ),
           ),
         ],
