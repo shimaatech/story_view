@@ -390,6 +390,8 @@ class StoryView extends StatefulWidget {
   /// provide this callback so as to enable scroll events on the list view.
   final Function(Direction?)? onVerticalSwipeComplete;
 
+  final Function(Direction? direction, double delta)? onHorizontalSwipeComplete;
+
   /// Callback for when a story and it index is currently being shown.
   final void Function(StoryItem storyItem, int index)? onStoryShow;
 
@@ -428,6 +430,7 @@ class StoryView extends StatefulWidget {
     this.repeat = false,
     this.inline = false,
     this.onVerticalSwipeComplete,
+    this.onHorizontalSwipeComplete,
     this.indicatorColor,
     this.indicatorForegroundColor,
     this.indicatorHeight = IndicatorHeight.large,
@@ -451,6 +454,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
   StreamSubscription<PlaybackState>? _playbackSubscription;
 
   VerticalDragInfo? verticalDragInfo;
+  HorizontalDragInfo? horizontalDragInfo;
 
   StoryItem? get _currentStory {
     return widget.storyItems.firstWhereOrNull((it) => !it!.shown);
@@ -695,6 +699,25 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                         }
 
                         verticalDragInfo = null;
+                      },
+                onHorizontalDragUpdate: widget.onHorizontalSwipeComplete == null
+                    ? null
+                    : (details) {
+                        if (horizontalDragInfo == null) {
+                          horizontalDragInfo = HorizontalDragInfo();
+                        }
+                        horizontalDragInfo!.update(details.primaryDelta!);
+                      },
+                onHorizontalDragEnd: widget.onHorizontalSwipeComplete == null
+                    ? null
+                    : (details) {
+                        // finish up drag cycle
+                        if (!horizontalDragInfo!.cancel) {
+                          widget.onHorizontalSwipeComplete!(
+                              horizontalDragInfo!.direction,
+                              horizontalDragInfo!.deltaTotal);
+                        }
+                        horizontalDragInfo = null;
                       },
               )),
           Visibility(

@@ -157,6 +157,8 @@ class _MoreStoriesState extends State<MoreStories> {
         title: Text("More"),
       ),
       body: StoryView(
+        onHorizontalSwipeComplete: (direction, delta) => print(
+            'horizontal swipe complete with direction: $direction and delta: $delta'),
         storyItems: [
           StoryItem(
               Column(
@@ -169,7 +171,7 @@ class _MoreStoriesState extends State<MoreStories> {
                       child: Text('Increase'))
                 ],
               ),
-              duration: Duration(seconds: 5)),
+              duration: Duration(seconds: 10)),
           StoryItem.text(
             title: "I guess you'd love to see more of our food. That's great.",
             backgroundColor: Colors.blue,
